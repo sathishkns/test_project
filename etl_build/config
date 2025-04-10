@@ -1,0 +1,52 @@
+## sample yaml file ###
+
+extracts:
+	- extract:
+		exec: read_table
+		source:
+			params:
+				metastore:
+				db:
+				table_name:
+	- extract:
+		exec: read_table
+		source:
+			params:
+				metastore:
+				db:
+				table_name:
+transforms:
+	- transform:
+		exec: process_sql
+		source:'sample.sql'
+	- transform:
+		exec: selectExpr
+		source: source_df
+		columns:col1,col2... coln
+	- transform:
+		exec: withcolumn
+		source: source_df
+		columns: col1, col2,... coln
+	- transform:
+		exec: create_cte
+		source: source_df
+		jointype: left
+		condition: <filter>
+	- transform:
+		exec: windowsFun
+		source: source_df
+		expr1: collect_list
+		expr2: aggregate
+			sub_expr1: max,min,groupBy
+			
+loads:
+	- load:
+		exec: upsert_delta_table
+		source: final_df
+		destination:
+			destination_db:
+			destination_table:
+			business_key:
+			cdc_enabled: True/False
+				insert: True/False
+				upsert: True/False
